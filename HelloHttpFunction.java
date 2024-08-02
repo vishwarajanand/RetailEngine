@@ -43,7 +43,7 @@ import java.util.Map;
 import java.util.LinkedHashMap;
 import com.google.gson.Gson;
 
-public class HelloWorld implements HttpFunction {
+public class HelloHttpFunction implements HttpFunction {
   @Override
   public void service(HttpRequest request, HttpResponse response) throws Exception {
 // Get the request body as a JSON object.
