@@ -52,7 +52,7 @@ public class HelloWorld implements HttpFunction {
 //searchText = "A new Natural Language Processing related Machine Learning Model";
     BufferedWriter writer = response.getWriter();
     String result = "";
-       String query = "select id, category, sub_category, uri, user_text, description, literature from ( SELECT id, user_text, description, category, sub_category, uri, ML_PREDICT_ROW('projects/<<PROJECT_ID>>/locations/us-central1/publishers/google/models/text-bison-32k',  json_build_object('instances', json_build_array(json_build_object( 'prompt', 'Read this user search text: ' || user_text || ' Compare it against the product record: ' || content || ' Return a response with 3 values: 1) MATCH: if the 2 products are at least 70% matching or not: YES or NO 2) PERCENTAGE: percentage of match 3) DIFFERENCE: A clear short easy decription of the difference between the 2 products. Remember if the user search text says that some attribute should not be there, and the product record has it, it should be a NO match.'  )  ),  'parameters', json_build_object( 'maxOutputTokens', 1024,  'topK', 40, 'topP', 0.8,  'temperature', 0.2 )) ) -> 'predictions' -> 0 -> 'content' AS literature FROM  (SELECT '" + searchText + "' as user_text, id, category, sub_category, uri, content, pdt_desc  as description FROM apparels ORDER BY embedding <=> embedding('textembedding-gecko@003', '" + searchText + "' )::vector LIMIT 25) as xyz ) as X where cast(literature as VARCHAR(500)) like '%MATCH:%YES%' ";
+       String query = "select id, category, sub_category, uri, user_text, description, literature from ( SELECT id, user_text, description, category, sub_category, uri, ML_PREDICT_ROW('projects/the-book-club-337319/locations/us-central1/publishers/google/models/text-bison-32k',  json_build_object('instances', json_build_array(json_build_object( 'prompt', 'Read this user search text: ' || user_text || ' Compare it against the product record: ' || content || ' Return a response with 3 values: 1) MATCH: if the 2 products are at least 70% matching or not: YES or NO 2) PERCENTAGE: percentage of match 3) DIFFERENCE: A clear short easy decription of the difference between the 2 products. Remember if the user search text says that some attribute should not be there, and the product record has it, it should be a NO match.'  )  ),  'parameters', json_build_object( 'maxOutputTokens', 1024,  'topK', 40, 'topP', 0.8,  'temperature', 0.2 )) ) -> 'predictions' -> 0 -> 'content' AS literature FROM  (SELECT '" + searchText + "' as user_text, id, category, sub_category, uri, content, pdt_desc  as description FROM apparels ORDER BY embedding <=> embedding('textembedding-gecko@003', '" + searchText + "' )::vector LIMIT 25) as xyz ) as X where cast(literature as VARCHAR(500)) like '%MATCH:%YES%' ";
     HikariDataSource dataSource = AlloyDbJdbcConnector();
 	JsonArray jsonArray = new JsonArray(); // Create a JSON array
  try (Connection connection = dataSource.getConnection()) {
@@ -78,16 +78,16 @@ public class HelloWorld implements HttpFunction {
   
 public  HikariDataSource AlloyDbJdbcConnector() {
    HikariDataSource dataSource;
-   String ALLOYDB_DB = "*****";
-   String ALLOYDB_USER = "*****";
-   String ALLOYDB_PASS = "*****";
-   String ALLOYDB_INSTANCE_NAME = "projects/abis-345004/locations/us-central1/clusters/vector-cluster/instances/vector-instance";
+   String ALLOYDB_DB = "postgres";
+   String ALLOYDB_USER = "postgres";
+   String ALLOYDB_PASS = "###############";
+   String ALLOYDB_INSTANCE_NAME = "projects/the-book-club-337319/locations/us-central1/clusters/shopping-assistant-cluster/instances/shopping-assistant-instance";
     HikariConfig config = new HikariConfig();
     config.setJdbcUrl(String.format("jdbc:postgresql:///%s", ALLOYDB_DB));
     config.setUsername(ALLOYDB_USER); // e.g., "postgres"
     config.setPassword(ALLOYDB_PASS); // e.g., "secret-password"
     config.addDataSourceProperty("socketFactory", "com.google.cloud.alloydb.SocketFactory");
-    config.addDataSourceProperty("alloydbInstanceName", ALLOYDB_INSTANCE_NAME);
+    config.addDataSourceProperty("shopping-assistant-instance", ALLOYDB_INSTANCE_NAME);
     dataSource = new HikariDataSource(config);
     return dataSource;
 }
